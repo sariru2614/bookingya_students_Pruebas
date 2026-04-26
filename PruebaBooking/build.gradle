@@ -49,6 +49,11 @@ dependencies {
 
 test {
     useJUnit() // importante para Serenity + JUnit4
+    testLogging {
+        events "passed", "failed", "skipped", "standardOut", "standardError"
+        exceptionFormat "full"
+        showStandardStreams = true
+    }
     finalizedBy 'aggregate'
 }
 
