@@ -49,6 +49,14 @@ dependencies {
 
 test {
     useJUnit() // importante para Serenity + JUnit4
+
+    systemProperty 'guestIdentification', System.getProperty('guestIdentification')
+    systemProperty 'guestName', System.getProperty('guestName')
+    systemProperty 'guestEmail', System.getProperty('guestEmail')
+    systemProperty 'roomCode', System.getProperty('roomCode')
+    systemProperty 'roomName', System.getProperty('roomName')
+
+
     testLogging {
         events "passed", "failed", "skipped", "standardOut", "standardError"
         exceptionFormat "full"
