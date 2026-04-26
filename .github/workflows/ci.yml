@@ -10,19 +10,19 @@ on:
       guestIdentification:
         description: 'Identificación del huésped'
         required: false
-        default: '2032'
+        default: '2034'
       guestName:
         description: 'Nombre del huésped'
         required: false
-        default: 'PruebaQA2032'
+        default: 'PruebaQA2034'
       guestEmail:
         description: 'Email del huésped'
         required: false
-        default: 'PruebaQA2032@PruebaQA2032.com'
+        default: 'PruebaQA2034@PruebaQA2034.com'
       roomCode:
         description: 'Código de habitación'
         required: false
-        default: '2032'
+        default: '2034'
       roomName:
         description: 'Nombre de habitación'
         required: false
@@ -89,7 +89,6 @@ jobs:
         run: |
           ./gradlew clean test \
             --tests "com.project.bookingya.unit.SuiteReservationUnitTestCase" \
-            --info \
             --stacktrace
 
       # -------------------------
@@ -98,10 +97,10 @@ jobs:
       - name: Run BDD tests (ReservationSuiteRunner)
         working-directory: PruebaBooking
         env:
-          GUEST_IDENTIFICATION: ${{ github.event.inputs.guestIdentification || '2032' }}
-          GUEST_NAME: ${{ github.event.inputs.guestName || 'PruebaQA2032' }}
-          GUEST_EMAIL: ${{ github.event.inputs.guestEmail || 'PruebaQA2032@PruebaQA2032.com' }}
-          ROOM_CODE: ${{ github.event.inputs.roomCode || '2032' }}
+          GUEST_IDENTIFICATION: ${{ github.event.inputs.guestIdentification || '2034' }}
+          GUEST_NAME: ${{ github.event.inputs.guestName || 'PruebaQA2034' }}
+          GUEST_EMAIL: ${{ github.event.inputs.guestEmail || 'PruebaQA2034@PruebaQA2034.com' }}
+          ROOM_CODE: ${{ github.event.inputs.roomCode || '2034' }}
           ROOM_NAME: ${{ github.event.inputs.roomName || 'HabitacionQA' }}
         run: |
           echo "=============================================="
@@ -110,7 +109,7 @@ jobs:
           echo "Room: $ROOM_CODE - $ROOM_NAME"
           echo "=============================================="
 
-          ./gradlew clean test aggregate \
+          ./gradlew clean test \
             --tests "*ReservationSuiteRunner" \
             --stacktrace \
             -DguestIdentification="$GUEST_IDENTIFICATION" \
@@ -118,6 +117,8 @@ jobs:
             -DguestEmail="$GUEST_EMAIL" \
             -DroomCode="$ROOM_CODE" \
             -DroomName="$ROOM_NAME"
+
+          ./gradlew aggregate
 
       # -------------------------
       # Reporte Serenity
