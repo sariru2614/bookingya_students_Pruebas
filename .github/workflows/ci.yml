@@ -1,0 +1,28 @@
+name: CI - BookingYa (Run App)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  run-app:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Run application (Spring Boot - Tomcat)
+        working-directory: bookingya_students
+        run: |
+          mvn clean spring-boot:run &
+          sleep 60
