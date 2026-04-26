@@ -6,6 +6,27 @@ on:
   pull_request:
     branches: [ main ]
   workflow_dispatch:
+    inputs:
+      guestIdentification:
+        description: 'Identificación del huésped'
+        required: false
+        default: '2012'
+      guestName:
+        description: 'Nombre del huésped'
+        required: false
+        default: 'PruebaQA2012'
+      guestEmail:
+        description: 'Email del huésped'
+        required: false
+        default: 'PruebaQA2012@PruebaQA2012.com'
+      roomCode:
+        description: 'Código de habitación'
+        required: false
+        default: '2012'
+      roomName:
+        description: 'Nombre de habitación'
+        required: false
+        default: 'HabitacionQA'
 
 jobs:
   tests:
@@ -46,8 +67,40 @@ jobs:
       - name: Give Gradle permissions
         run: |
           chmod +x UnitTestBookinYa/gradlew
+          chmod +x PruebaBooking/gradlew
 
       - name: Run TDD unit tests (Suite)
         working-directory: UnitTestBookinYa
         run: |
           ./gradlew clean test --tests "com.project.bookingya.unit.SuiteReservationUnitTestCase"
+
+      - name: Run BDD tests (PruebaBooking)
+        working-directory: PruebaBooking
+        env:
+          GUEST_IDENTIFICATION: ${{ github.event.inputs.guestIdentification || '2012' }}
+          GUEST_NAME: ${{ github.event.inputs.guestName || 'PruebaQA2012' }}
+          GUEST_EMAIL: ${{ github.event.inputs.guestEmail || 'PruebaQA2012@PruebaQA2012.com' }}
+          ROOM_CODE: ${{ github.event.inputs.roomCode || '2012' }}
+          ROOM_NAME: ${{ github.event.inputs.roomName || 'HabitacionQA' }}
+        run: |
+          echo "=============================================="
+          echo "EJECUCIÓN DE PRUEBAS BDD - PruebaBooking"
+          echo "Feature: Create reservation"
+          echo "Se validan los siguientes escenarios:"
+          echo "- Creación de huésped"
+          echo "- Creación de habitación"
+          echo "- Creación de reserva exitosa"
+          echo "=============================================="
+
+          ./gradlew clean test aggregate \
+            -DguestIdentification="$GUEST_IDENTIFICATION" \
+            -DguestName="$GUEST_NAME" \
+            -DguestEmail="$GUEST_EMAIL" \
+            -DroomCode="$ROOM_CODE" \
+            -DroomName="$ROOM_NAME"
+
+      - name: Upload BDD Serenity report
+        uses: actions/upload-artifact@v4
+        with:
+          name: serenity-bdd-report
+          path: PruebaBooking/target/site/serenity

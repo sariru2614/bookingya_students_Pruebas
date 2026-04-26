@@ -29,14 +29,20 @@ public class CreateReservationStepDefinitions {
 
         Map<String, String> data = dataTable.asMaps().get(0);
 
+        String identification = System.getProperty("guestIdentification", data.get("identification"));
+        String name = System.getProperty("guestName", data.get("name"));
+        String email = System.getProperty("guestEmail", data.get("email"));
+
         Guest guest = new Guest(
-                data.get("identification"),
-                data.get("name"),
-                data.get("email")
+                identification,
+                name,
+                email
         );
 
         System.out.println("========== STEP 1: CREATE GUEST ==========");
-        System.out.println("Creating guest with identification: " + data.get("identification"));
+        System.out.println("Creating guest with identification: " + identification);
+        System.out.println("Creating guest with name: " + name);
+        System.out.println("Creating guest with email: " + email);
 
         user.attemptsTo(CreateGuest.withInfo(guest));
 
@@ -61,9 +67,12 @@ public class CreateReservationStepDefinitions {
 
         Map<String, String> data = dataTable.asMaps().get(0);
 
+        String code = System.getProperty("roomCode", data.get("code"));
+        String name = System.getProperty("roomName", data.get("name"));
+
         Room room = new Room(
-                data.get("code"),
-                data.get("name"),
+                code,
+                name,
                 data.get("city"),
                 Integer.parseInt(data.get("maxGuests")),
                 Integer.parseInt(data.get("nightlyPrice")),
@@ -71,7 +80,8 @@ public class CreateReservationStepDefinitions {
         );
 
         System.out.println("========== STEP 2: CREATE ROOM ==========");
-        System.out.println("Creating room with code: " + data.get("code"));
+        System.out.println("Creating room with code: " + code);
+        System.out.println("Creating room with name: " + name);
 
         user.attemptsTo(CreateRoom.withInfo(room));
 
