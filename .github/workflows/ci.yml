@@ -112,7 +112,6 @@ jobs:
 
           ./gradlew clean test aggregate \
             --tests "*ReservationSuiteRunner" \
-            --info \
             --stacktrace \
             -DguestIdentification="$GUEST_IDENTIFICATION" \
             -DguestName="$GUEST_NAME" \

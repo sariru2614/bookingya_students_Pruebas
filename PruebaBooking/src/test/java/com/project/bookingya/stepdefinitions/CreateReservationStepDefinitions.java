@@ -133,7 +133,6 @@ public class CreateReservationStepDefinitions {
 
     @Then("the reservation should be created successfully")
     public void theReservationShouldBeCreatedSuccessfully() {
-
         int status = SerenityRest.lastResponse().statusCode();
         String body = SerenityRest.lastResponse().asString();
 
@@ -142,7 +141,6 @@ public class CreateReservationStepDefinitions {
         System.out.println("Final reservation response body: " + body);
         System.out.println("==============================================");
 
-        assertEquals(200, statusCode());
-        System.out.println("Reservation created successfully");
+        assertEquals(200, status);
     }
 }
