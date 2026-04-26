@@ -24,5 +24,4 @@ jobs:
       - name: Run application (Spring Boot - Tomcat)
         working-directory: bookingya_students
         run: |
-          mvn clean spring-boot:run &
-          sleep 60
+          mvn clean spring-boot:run -e
