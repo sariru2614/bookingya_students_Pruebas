@@ -10,19 +10,19 @@ on:
       guestIdentification:
         description: 'Identificación del huésped'
         required: false
-        default: '2012'
+        default: '2030'
       guestName:
         description: 'Nombre del huésped'
         required: false
-        default: 'PruebaQA2012'
+        default: 'PruebaQA2030'
       guestEmail:
         description: 'Email del huésped'
         required: false
-        default: 'PruebaQA2012@PruebaQA2012.com'
+        default: 'PruebaQA2030@PruebaQA2030.com'
       roomCode:
         description: 'Código de habitación'
         required: false
-        default: '2012'
+        default: '2030'
       roomName:
         description: 'Nombre de habitación'
         required: false
@@ -74,25 +74,27 @@ jobs:
         run: |
           ./gradlew clean test --tests "com.project.bookingya.unit.SuiteReservationUnitTestCase"
 
-      - name: Run BDD tests (PruebaBooking)
+      - name: Run BDD tests (ReservationSuiteRunner only)
         working-directory: PruebaBooking
         env:
-          GUEST_IDENTIFICATION: ${{ github.event.inputs.guestIdentification || '2012' }}
-          GUEST_NAME: ${{ github.event.inputs.guestName || 'PruebaQA2012' }}
-          GUEST_EMAIL: ${{ github.event.inputs.guestEmail || 'PruebaQA2012@PruebaQA2012.com' }}
-          ROOM_CODE: ${{ github.event.inputs.roomCode || '2012' }}
+          GUEST_IDENTIFICATION: ${{ github.event.inputs.guestIdentification || '2030' }}
+          GUEST_NAME: ${{ github.event.inputs.guestName || 'PruebaQA2030' }}
+          GUEST_EMAIL: ${{ github.event.inputs.guestEmail || 'PruebaQA2030@PruebaQA2030.com' }}
+          ROOM_CODE: ${{ github.event.inputs.roomCode || '2030' }}
           ROOM_NAME: ${{ github.event.inputs.roomName || 'HabitacionQA' }}
         run: |
           echo "=============================================="
-          echo "EJECUCIÓN DE PRUEBAS BDD - PruebaBooking"
-          echo "Feature: Create reservation"
-          echo "Se validan los siguientes escenarios:"
-          echo "- Creación de huésped"
-          echo "- Creación de habitación"
-          echo "- Creación de reserva exitosa"
+          echo "EJECUCIÓN DE PRUEBAS BDD - ReservationSuiteRunner"
+          echo "Se ejecuta únicamente el runner ReservationSuiteRunner"
+          echo "Datos recibidos:"
+          echo "Guest identification: $GUEST_IDENTIFICATION"
+          echo "Guest name: $GUEST_NAME"
+          echo "Guest email: $GUEST_EMAIL"
+          echo "Room code: $ROOM_CODE"
+          echo "Room name: $ROOM_NAME"
           echo "=============================================="
 
-          ./gradlew clean test aggregate \
+          ./gradlew clean test --tests "*ReservationSuiteRunner" aggregate \
             -DguestIdentification="$GUEST_IDENTIFICATION" \
             -DguestName="$GUEST_NAME" \
             -DguestEmail="$GUEST_EMAIL" \
