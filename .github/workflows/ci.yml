@@ -28,6 +28,27 @@ on:
         required: false
         default: 'HabitacionQA'
 
+      atddGuestIdentification:
+        description: 'ATDD - Identificación del huésped'
+        required: false
+        default: '2225'
+      atddGuestName:
+        description: 'ATDD - Nombre del huésped'
+        required: false
+        default: 'PruebaQA2225'
+      atddGuestEmail:
+        description: 'ATDD - Email del huésped'
+        required: false
+        default: 'PruebaQA2225@PruebaQA2225.com'
+      atddRoomCode:
+        description: 'ATDD - Código de habitación'
+        required: false
+        default: '2225'
+      atddRoomName:
+        description: 'ATDD - Nombre de habitación'
+        required: false
+        default: 'HabitacionQA'
+
 jobs:
   tests:
     runs-on: ubuntu-latest
@@ -48,15 +69,9 @@ jobs:
           --health-retries=5
 
     steps:
-      # -------------------------
-      # Checkout
-      # -------------------------
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # -------------------------
-      # Java
-      # -------------------------
       - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
@@ -64,26 +79,18 @@ jobs:
           java-version: '17'
           cache: maven
 
-      # -------------------------
-      # Run App
-      # -------------------------
       - name: Run application (Spring Boot)
         working-directory: bookingya_students
         run: |
           mvn clean spring-boot:run -e &
           sleep 60
 
-      # -------------------------
-      # Permisos Gradle
-      # -------------------------
       - name: Give Gradle permissions
         run: |
           chmod +x UnitTestBookinYa/gradlew
           chmod +x PruebaBooking/gradlew
+          chmod +x PruebaBookingATDD/gradlew
 
-      # -------------------------
-      # TDD
-      # -------------------------
       - name: Run TDD unit tests (Suite)
         working-directory: UnitTestBookinYa
         run: |
@@ -91,9 +98,6 @@ jobs:
             --tests "com.project.bookingya.unit.SuiteReservationUnitTestCase" \
             --stacktrace
 
-      # -------------------------
-      # BDD (SOLO SUITE)
-      # -------------------------
       - name: Run BDD tests (ReservationSuiteRunner)
         working-directory: PruebaBooking
         env:
@@ -120,11 +124,40 @@ jobs:
 
           ./gradlew aggregate
 
-      # -------------------------
-      # Reporte Serenity
-      # -------------------------
+      - name: Run ATDD tests (ReservationSuiteATDDRunner)
+        working-directory: PruebaBookingATDD
+        env:
+          ATDD_GUEST_IDENTIFICATION: ${{ github.event.inputs.atddGuestIdentification || '2225' }}
+          ATDD_GUEST_NAME: ${{ github.event.inputs.atddGuestName || 'PruebaQA2225' }}
+          ATDD_GUEST_EMAIL: ${{ github.event.inputs.atddGuestEmail || 'PruebaQA2225@PruebaQA2225.com' }}
+          ATDD_ROOM_CODE: ${{ github.event.inputs.atddRoomCode || '2225' }}
+          ATDD_ROOM_NAME: ${{ github.event.inputs.atddRoomName || 'HabitacionQA' }}
+        run: |
+          echo "=============================================="
+          echo "EJECUCIÓN ATDD - ReservationSuiteATDDRunner"
+          echo "Guest: $ATDD_GUEST_IDENTIFICATION - $ATDD_GUEST_NAME"
+          echo "Room: $ATDD_ROOM_CODE - $ATDD_ROOM_NAME"
+          echo "=============================================="
+
+          ./gradlew clean test \
+            --tests "*ReservationSuiteATDDRunner" \
+            --stacktrace \
+            -DatddGuestIdentification="$ATDD_GUEST_IDENTIFICATION" \
+            -DatddGuestName="$ATDD_GUEST_NAME" \
+            -DatddGuestEmail="$ATDD_GUEST_EMAIL" \
+            -DatddRoomCode="$ATDD_ROOM_CODE" \
+            -DatddRoomName="$ATDD_ROOM_NAME"
+
+          ./gradlew aggregate
+
       - name: Upload BDD Serenity report
         uses: actions/upload-artifact@v4
         with:
           name: serenity-bdd-report
           path: PruebaBooking/target/site/serenity
+
+      - name: Upload ATDD Serenity report
+        uses: actions/upload-artifact@v4
+        with:
+          name: serenity-atdd-report
+          path: PruebaBookingATDD/target/site/serenity

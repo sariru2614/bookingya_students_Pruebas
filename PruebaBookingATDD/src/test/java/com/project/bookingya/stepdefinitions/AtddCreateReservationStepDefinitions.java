@@ -32,13 +32,16 @@ public class AtddCreateReservationStepDefinitions {
 
         Map<String, String> data = dataTable.asMaps().get(0);
 
-        Guest guest = new Guest(
-                data.get("identification"),
-                data.get("name"),
-                data.get("email")
-        );
+        String identification = System.getProperty("atddGuestIdentification", data.get("identification"));
+        String name = System.getProperty("atddGuestName", data.get("name"));
+        String email = System.getProperty("atddGuestEmail", data.get("email"));
+
+        Guest guest = new Guest(identification, name, email);
 
         System.out.println("========== ATDD STEP 1: REGISTER GUEST ==========");
+        System.out.println("Guest identification: " + identification);
+        System.out.println("Guest name: " + name);
+        System.out.println("Guest email: " + email);
 
         guestActor.attemptsTo(CreateGuest.withInfo(guest));
 
@@ -62,9 +65,12 @@ public class AtddCreateReservationStepDefinitions {
 
         Map<String, String> data = dataTable.asMaps().get(0);
 
+        String code = System.getProperty("atddRoomCode", data.get("code"));
+        String name = System.getProperty("atddRoomName", data.get("name"));
+
         Room room = new Room(
-                data.get("code"),
-                data.get("name"),
+                code,
+                name,
                 data.get("city"),
                 Integer.parseInt(data.get("maxGuests")),
                 Integer.parseInt(data.get("nightlyPrice")),
@@ -72,6 +78,8 @@ public class AtddCreateReservationStepDefinitions {
         );
 
         System.out.println("========== ATDD STEP 2: SELECT AVAILABLE ROOM ==========");
+        System.out.println("Room code: " + code);
+        System.out.println("Room name: " + name);
 
         guestActor.attemptsTo(CreateRoom.withInfo(room));
 
@@ -124,7 +132,15 @@ public class AtddCreateReservationStepDefinitions {
     @Then("the booking should be confirmed")
     public void theBookingShouldBeConfirmed() {
 
-        assertEquals(200, SerenityRest.lastResponse().statusCode());
+        int status = SerenityRest.lastResponse().statusCode();
+        String body = SerenityRest.lastResponse().asString();
+
+        System.out.println("========== ATDD FINAL ASSERT ==========");
+        System.out.println("Final booking status code: " + status);
+        System.out.println("Final booking response body: " + body);
+        System.out.println("=======================================");
+
+        assertEquals(200, status);
 
         String responseGuestId = SerenityRest.lastResponse().jsonPath().getString("guestId");
         String responseRoomId = SerenityRest.lastResponse().jsonPath().getString("roomId");
@@ -162,7 +178,6 @@ public class AtddCreateReservationStepDefinitions {
         System.out.println("Booking details match the guest request");
     }
 
-    // 🔥 SOLUCIÓN DEL ERROR DE FECHAS
     private String normalizeDate(String date) {
         return date
                 .replace(".000Z", "")
