@@ -1,4 +1,4 @@
-name: CI - BookingYa (Run App)
+name: CI - BookingYa Tests
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  run-app:
+  tests:
     runs-on: ubuntu-latest
 
     services:
@@ -36,8 +36,16 @@ jobs:
           java-version: '17'
           cache: maven
 
-      - name: Run application (Spring Boot - Tomcat)
+      - name: Run application
         working-directory: bookingya_students
         run: |
           mvn clean spring-boot:run -e &
           sleep 60
+
+      - name: Give Gradle permissions
+        run: chmod +x UnitTestBookinYa/gradlew
+
+      - name: Run TDD unit tests
+        working-directory: UnitTestBookinYa
+        run: |
+          ./gradlew clean test
