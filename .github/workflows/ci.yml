@@ -26,9 +26,15 @@ jobs:
           --health-retries=5
 
     steps:
+      # -------------------------
+      # Checkout del repositorio
+      # -------------------------
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # -------------------------
+      # Configurar Java
+      # -------------------------
       - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
@@ -36,16 +42,26 @@ jobs:
           java-version: '17'
           cache: maven
 
-      - name: Run application
+      # -------------------------
+      # Levantar aplicacion
+      # -------------------------
+      - name: Run application (Spring Boot - Tomcat)
         working-directory: bookingya_students
         run: |
           mvn clean spring-boot:run -e &
           sleep 60
 
+      # -------------------------
+      # Permisos Gradle
+      # -------------------------
       - name: Give Gradle permissions
-        run: chmod +x UnitTestBookinYa/gradlew
+        run: |
+          chmod +x UnitTestBookinYa/gradlew
 
-      - name: Run TDD unit tests
+      # -------------------------
+      # Ejecutar suite TDD
+      # -------------------------
+      - name: Run TDD unit tests (Suite)
         working-directory: UnitTestBookinYa
         run: |
-          ./gradlew clean test
+          ./gradlew clean test --tests "com.project.bookingya.unit.SuiteReservationUnitTestCase"
