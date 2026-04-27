@@ -13,7 +13,6 @@ import net.serenitybdd.screenplay.Actor;
 
 import java.util.Map;
 
-import static com.project.bookingya.questions.ReservationResponse.statusCode;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -29,20 +28,16 @@ public class CreateReservationStepDefinitions {
 
         Map<String, String> data = dataTable.asMaps().get(0);
 
-        String identification = System.getProperty("guestIdentification", data.get("identification"));
-        String name = System.getProperty("guestName", data.get("name"));
-        String email = System.getProperty("guestEmail", data.get("email"));
+        String identification = System.getProperty("atddGuestIdentification", data.get("identification"));
+        String name = System.getProperty("atddGuestName", data.get("name"));
+        String email = System.getProperty("atddGuestEmail", data.get("email"));
 
-        Guest guest = new Guest(
-                identification,
-                name,
-                email
-        );
+        Guest guest = new Guest(identification, name, email);
 
-        System.out.println("========== STEP 1: CREATE GUEST ==========");
-        System.out.println("Creating guest with identification: " + identification);
-        System.out.println("Creating guest with name: " + name);
-        System.out.println("Creating guest with email: " + email);
+        System.out.println("========== ATDD STEP 1: CREATE GUEST ==========");
+        System.out.println("Guest identification: " + identification);
+        System.out.println("Guest name: " + name);
+        System.out.println("Guest email: " + email);
 
         user.attemptsTo(CreateGuest.withInfo(guest));
 
@@ -57,7 +52,7 @@ public class CreateReservationStepDefinitions {
         guestId = SerenityRest.lastResponse().jsonPath().getString("id");
 
         System.out.println("Guest created with ID: " + guestId);
-        System.out.println("==========================================");
+        System.out.println("===============================================");
 
         assertNotNull("The guest id should not be null", guestId);
     }
@@ -67,8 +62,8 @@ public class CreateReservationStepDefinitions {
 
         Map<String, String> data = dataTable.asMaps().get(0);
 
-        String code = System.getProperty("roomCode", data.get("code"));
-        String name = System.getProperty("roomName", data.get("name"));
+        String code = System.getProperty("atddRoomCode", data.get("code"));
+        String name = System.getProperty("atddRoomName", data.get("name"));
 
         Room room = new Room(
                 code,
@@ -79,9 +74,9 @@ public class CreateReservationStepDefinitions {
                 Boolean.parseBoolean(data.get("available"))
         );
 
-        System.out.println("========== STEP 2: CREATE ROOM ==========");
-        System.out.println("Creating room with code: " + code);
-        System.out.println("Creating room with name: " + name);
+        System.out.println("========== ATDD STEP 2: CREATE ROOM ==========");
+        System.out.println("Room code: " + code);
+        System.out.println("Room name: " + name);
 
         user.attemptsTo(CreateRoom.withInfo(room));
 
@@ -96,7 +91,7 @@ public class CreateReservationStepDefinitions {
         roomId = SerenityRest.lastResponse().jsonPath().getString("id");
 
         System.out.println("Room created with ID: " + roomId);
-        System.out.println("=========================================");
+        System.out.println("==============================================");
 
         assertNotNull("The room id should not be null", roomId);
     }
@@ -115,9 +110,9 @@ public class CreateReservationStepDefinitions {
                 data.get("notes")
         );
 
-        System.out.println("========== STEP 3: CREATE RESERVATION ==========");
-        System.out.println("Creating reservation with guestId: " + guestId);
-        System.out.println("Creating reservation with roomId: " + roomId);
+        System.out.println("========== ATDD STEP 3: CREATE RESERVATION ==========");
+        System.out.println("Guest ID: " + guestId);
+        System.out.println("Room ID: " + roomId);
         System.out.println("CheckIn: " + data.get("checkIn"));
         System.out.println("CheckOut: " + data.get("checkOut"));
 
@@ -128,18 +123,19 @@ public class CreateReservationStepDefinitions {
 
         System.out.println("Reservation response status: " + status);
         System.out.println("Reservation response body: " + response);
-        System.out.println("================================================");
+        System.out.println("=====================================================");
     }
 
     @Then("the reservation should be created successfully")
     public void theReservationShouldBeCreatedSuccessfully() {
+
         int status = SerenityRest.lastResponse().statusCode();
         String body = SerenityRest.lastResponse().asString();
 
-        System.out.println("========== FINAL ASSERT RESERVATION ==========");
+        System.out.println("========== ATDD FINAL ASSERT ==========");
         System.out.println("Final reservation status code: " + status);
         System.out.println("Final reservation response body: " + body);
-        System.out.println("==============================================");
+        System.out.println("======================================");
 
         assertEquals(200, status);
     }
