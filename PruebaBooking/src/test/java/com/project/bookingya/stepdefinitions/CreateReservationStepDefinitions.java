@@ -28,13 +28,13 @@ public class CreateReservationStepDefinitions {
 
         Map<String, String> data = dataTable.asMaps().get(0);
 
-        String identification = System.getProperty("atddGuestIdentification", data.get("identification"));
-        String name = System.getProperty("atddGuestName", data.get("name"));
-        String email = System.getProperty("atddGuestEmail", data.get("email"));
+        String identification = System.getProperty("guestIdentification", data.get("identification"));
+        String name = System.getProperty("guestName", data.get("name"));
+        String email = System.getProperty("guestEmail", data.get("email"));
 
         Guest guest = new Guest(identification, name, email);
 
-        System.out.println("========== ATDD STEP 1: CREATE GUEST ==========");
+        System.out.println("========== BDD STEP 1: CREATE GUEST ==========");
         System.out.println("Guest identification: " + identification);
         System.out.println("Guest name: " + name);
         System.out.println("Guest email: " + email);
@@ -52,7 +52,7 @@ public class CreateReservationStepDefinitions {
         guestId = SerenityRest.lastResponse().jsonPath().getString("id");
 
         System.out.println("Guest created with ID: " + guestId);
-        System.out.println("===============================================");
+        System.out.println("==============================================");
 
         assertNotNull("The guest id should not be null", guestId);
     }
@@ -62,8 +62,8 @@ public class CreateReservationStepDefinitions {
 
         Map<String, String> data = dataTable.asMaps().get(0);
 
-        String code = System.getProperty("atddRoomCode", data.get("code"));
-        String name = System.getProperty("atddRoomName", data.get("name"));
+        String code = System.getProperty("roomCode", data.get("code"));
+        String name = System.getProperty("roomName", data.get("name"));
 
         Room room = new Room(
                 code,
@@ -74,7 +74,7 @@ public class CreateReservationStepDefinitions {
                 Boolean.parseBoolean(data.get("available"))
         );
 
-        System.out.println("========== ATDD STEP 2: CREATE ROOM ==========");
+        System.out.println("========== BDD STEP 2: CREATE ROOM ==========");
         System.out.println("Room code: " + code);
         System.out.println("Room name: " + name);
 
@@ -91,7 +91,7 @@ public class CreateReservationStepDefinitions {
         roomId = SerenityRest.lastResponse().jsonPath().getString("id");
 
         System.out.println("Room created with ID: " + roomId);
-        System.out.println("==============================================");
+        System.out.println("=============================================");
 
         assertNotNull("The room id should not be null", roomId);
     }
@@ -110,11 +110,9 @@ public class CreateReservationStepDefinitions {
                 data.get("notes")
         );
 
-        System.out.println("========== ATDD STEP 3: CREATE RESERVATION ==========");
+        System.out.println("========== BDD STEP 3: CREATE RESERVATION ==========");
         System.out.println("Guest ID: " + guestId);
         System.out.println("Room ID: " + roomId);
-        System.out.println("CheckIn: " + data.get("checkIn"));
-        System.out.println("CheckOut: " + data.get("checkOut"));
 
         user.attemptsTo(CreateReservation.withInfo(reservation));
 
@@ -123,7 +121,7 @@ public class CreateReservationStepDefinitions {
 
         System.out.println("Reservation response status: " + status);
         System.out.println("Reservation response body: " + response);
-        System.out.println("=====================================================");
+        System.out.println("====================================================");
     }
 
     @Then("the reservation should be created successfully")
@@ -132,7 +130,7 @@ public class CreateReservationStepDefinitions {
         int status = SerenityRest.lastResponse().statusCode();
         String body = SerenityRest.lastResponse().asString();
 
-        System.out.println("========== ATDD FINAL ASSERT ==========");
+        System.out.println("========== BDD FINAL ASSERT ==========");
         System.out.println("Final reservation status code: " + status);
         System.out.println("Final reservation response body: " + body);
         System.out.println("======================================");
