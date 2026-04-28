@@ -131,8 +131,8 @@ public class CreateReservationStepDefinitions {
         String body = SerenityRest.lastResponse().asString();
 
         System.out.println("========== BDD FINAL ASSERT ==========");
-        System.out.println("Final reservation status code: " + status);
-        System.out.println("Final reservation response body: " + body);
+        System.out.println("Reservation status code: " + status);
+        System.out.println("Reservation response body: " + body);
         System.out.println("======================================");
 
         assertEquals(200, status);

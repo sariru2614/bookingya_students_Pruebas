@@ -20,9 +20,6 @@ repositories {
 
 dependencies {
 
-    // -----------------------
-    // SPRING / APP
-    // -----------------------
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
@@ -30,31 +27,19 @@ dependencies {
 
     runtimeOnly 'com.h2database:h2:2.2.224'
 
-    // -----------------------
-    // LOMBOK
-    // -----------------------
     compileOnly 'org.projectlombok:lombok:1.18.32'
     annotationProcessor 'org.projectlombok:lombok:1.18.32'
 
     testCompileOnly 'org.projectlombok:lombok:1.18.32'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.32'
 
-    // -----------------------
-    // JUNIT
-    // -----------------------
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
     testImplementation 'org.junit.platform:junit-platform-suite:1.10.2'
 
-    // -----------------------
-    // SERENITY
-    // -----------------------
     testImplementation 'net.serenity-bdd:serenity-core:5.3.10'
     testImplementation 'net.serenity-bdd:serenity-junit5:5.3.10'
 
-    // -----------------------
-    // 🔥 SELENIUM (VERSIÓN CONTROLADA)
-    // -----------------------
     testImplementation 'org.seleniumhq.selenium:selenium-java:4.20.0'
     testImplementation 'org.seleniumhq.selenium:selenium-api:4.20.0'
     testImplementation 'org.seleniumhq.selenium:selenium-remote-driver:4.20.0'
@@ -72,10 +57,8 @@ test {
 
 defaultTasks 'clean', 'test', 'aggregate'
 
-/*
- 🔥 CLAVE: Forzar TODAS las dependencias de Selenium
- Esto elimina el error HasDownloads
-*/
+
+
 configurations.configureEach {
     resolutionStrategy.eachDependency { details ->
         if (details.requested.group == 'org.seleniumhq.selenium') {
