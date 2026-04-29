@@ -29,6 +29,7 @@ Valida el comportamiento funcional mediante Gherkin.
 
 ### ATDD
 Valida criterios de aceptación del negocio.
+
 *Para la automatización de estas pruebas se utilizó el framework Serenity, el cual permite ejecutar los escenarios y generar reportes detallados que evidencian el cumplimiento de los criterios de aceptación.
 
 ---
